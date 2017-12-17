@@ -7,10 +7,10 @@ set node_tag 1;
 set ele_tag 1;
 
 set block_no 1;
-set width 1.0;
-set depth 1.0;
-set mesh_width 10;
-set mesh_depth 10;
+set width 100.0;
+set depth 100.0;
+set mesh_width 20;
+set mesh_depth 20;
 
 
 
@@ -64,7 +64,7 @@ nDMaterial ElasticIsotropic 1 $E $v;
 
 #Section
 set shell_section_tag 1;
-section PlateFiber $shell_section_tag 1 1.0;
+section PlateFiber $shell_section_tag 1 1;
 
 #Element
 #element ShellMITC4 1 1 2 3 4 1;
@@ -111,11 +111,11 @@ system BandGeneral;
 test NormDispIncr 1.0E-3 50;
 algorithm Newton;
 set temp [expr 1+$mesh_depth];
-integrator DisplacementControl $RefNodeTag2 2 0.001;
+integrator DisplacementControl $RefNodeTag2 2 -0.001;
 analysis Static;
-analyze 10;
+analyze 100;
 
-print -node ${block_no}0${temp}02;
-print -node ${block_no}0505;
+print -node ${block_no}0${temp}020;
+print -node ${block_no}011011;
 print -node $RefNodeTag2;
 print -node $RefNodeTag1;
