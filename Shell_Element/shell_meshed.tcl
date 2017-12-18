@@ -1,4 +1,7 @@
 wipe;
+
+source "../Shared_Proc/Analysis.tcl";
+
 model BasicBuilder -ndm 3 -ndf 6;
 
 #node
@@ -7,12 +10,12 @@ set node_tag 1;
 set ele_tag 1;
 
 set block_no 1;
-set width 100.0;
-set depth 100.0;
-set mesh_width 20;
-set mesh_depth 20;
+set width 1.0;
+set depth 1.0;
+set mesh_width 1;
+set mesh_depth 1;
 
-
+set AlgOrder [list KrylovNewton BFGS SecantNewton NewtonLineSearch];
 
 set step_width [expr $width / $mesh_width];
 set step_depth [expr $depth / $mesh_depth];
@@ -95,8 +98,8 @@ foreach temp $node_nos_side1 {
 }
 
 foreach temp $node_nos_side3 {
-    #equalDOF $RefNodeTag2 $temp 1 2 3 4 5 6;
-    rigidLink bar $RefNodeTag2 $temp;
+    equalDOF $RefNodeTag2 $temp 1 2 3 4 5 6;
+    #rigidLink bar $RefNodeTag2 $temp;
 }
 #Load
 pattern Plain 1 Linear {
@@ -109,19 +112,22 @@ pattern Plain 1 Linear {
 recorder display "1" 10 10 800 800 -wipe;
 prp 9.0e3 9.0e3 1;
 vup  0  1 0;
-vpn  0.5  0.5 0.5;
-display 1 5 200;
+vpn  0  0 0;
+display 1 5 1;
 
 #Analysis
 constraints Plain;
 numberer Plain;
 system BandGeneral;
-test NormDispIncr 1.0E-3 50;
-algorithm Newton;
+
+
 set temp [expr 1+$mesh_depth];
-integrator DisplacementControl $RefNodeTag2 2 0.001;
-analysis Static;
-analyze 20;
+
+set isFinish [Analyse_Static_Disp_Control $RefNodeTag2 2 0.002 0.001 1.0E-3 50 $AlgOrder]
+
+#integrator DisplacementControl $RefNodeTag2 2 0.001;
+#analysis Static;
+#analyze 20;
 
 print -node ${block_no}0${temp}020;
 print -node ${block_no}011011;
