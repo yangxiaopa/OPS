@@ -17,10 +17,10 @@ set mesh_depth 20;
 set step_width [expr $width / $mesh_width];
 set step_depth [expr $depth / $mesh_depth];
 
-for {set i 1} {$i <= [expr 1+$mesh_width]} {incr i} {
-    for {set j 1} {$j <= [expr 1+$mesh_depth]} {incr j} {
-        set temp_x [expr ($i-1) * $step_width];
-        set temp_y [expr ($j-1) * $step_depth];
+for {set i 1} {$i <= [expr 1+$mesh_depth]} {incr i} {
+    set temp_y [expr ($i-1) * $step_depth];
+    for {set j 1} {$j <= [expr 1+$mesh_width]} {incr j} {
+        set temp_x [expr ($j-1) * $step_width];
         node ${block_no}0${i}0${j} $temp_x $temp_y 0.0;
     }
 }
@@ -64,7 +64,7 @@ nDMaterial ElasticIsotropic 1 $E $v;
 
 #Section
 set shell_section_tag 1;
-section PlateFiber $shell_section_tag 1 1;
+section PlateFiber $shell_section_tag 1 1.0;
 
 #Element
 #element ShellMITC4 1 1 2 3 4 1;
@@ -104,6 +104,14 @@ pattern Plain 1 Linear {
 }
 
 
+#Display the model if wanted
+
+recorder display "1" 10 10 800 800 -wipe;
+prp 9.0e3 9.0e3 1;
+vup  0  1 0;
+vpn  0.5  0.5 0.5;
+display 1 5 200;
+
 #Analysis
 constraints Plain;
 numberer Plain;
@@ -111,9 +119,9 @@ system BandGeneral;
 test NormDispIncr 1.0E-3 50;
 algorithm Newton;
 set temp [expr 1+$mesh_depth];
-integrator DisplacementControl $RefNodeTag2 2 -0.001;
+integrator DisplacementControl $RefNodeTag2 2 0.001;
 analysis Static;
-analyze 100;
+analyze 20;
 
 print -node ${block_no}0${temp}020;
 print -node ${block_no}011011;
