@@ -63,11 +63,13 @@ proc comment {} {
 #material
 set E 1.0;
 set v 0.1;
-nDMaterial ElasticIsotropic 1 $E $v;
+#nDMaterial ElasticIsotropic 1 $E $v;
+nDMaterial Damage2p 1 30.0;
+nDMaterial PlaneStress 2 1;
 
 #Section
 set shell_section_tag 1;
-section PlateFiber $shell_section_tag 1 1.0;
+section PlateFiber $shell_section_tag 2 1.0;
 
 #Element
 #element ShellMITC4 1 1 2 3 4 1;
@@ -112,8 +114,12 @@ pattern Plain 1 Linear {
 recorder display "1" 10 10 800 800 -wipe;
 prp 9.0e3 9.0e3 1;
 vup  0  1 0;
-vpn  0  0 0;
-display 1 5 1;
+vpn  0  0 1;
+display 1 5 20;
+
+
+recorder Node -file "temp_F.out" -node $RefNodeTag2 -dof 2 reaction;
+recorder Node -file "temp_D.out" -node $RefNodeTag2 -dof 2 disp;
 
 #Analysis
 constraints Plain;
@@ -123,7 +129,7 @@ system BandGeneral;
 
 set temp [expr 1+$mesh_depth];
 
-set isFinish [Analyse_Static_Disp_Control $RefNodeTag2 2 0.002 0.001 1.0E-3 50 $AlgOrder]
+set isFinish [Analyse_Static_Disp_Control $RefNodeTag2 2 0.02 0.001 1.0E-3 50 $AlgOrder]
 
 #integrator DisplacementControl $RefNodeTag2 2 0.001;
 #analysis Static;
