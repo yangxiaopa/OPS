@@ -13,8 +13,8 @@ set ele_tag 1;
 set BlockTag 1;
 set width 1.0;
 set depth 1.0;
-set widthMeshNum 50;
-set depthMeshNum 50;
+set widthMeshNum 5;
+set depthMeshNum 5;
 
 set AlgOrder [list BFGS KrylovNewton  SecantNewton NewtonLineSearch];
 set AlgOrder [list Newton];
@@ -93,12 +93,12 @@ recorder Node -file "temp_D.out" -node $RefNodeTag2 -dof 2 disp;
 #Analysis
 constraints Plain;
 numberer Plain;
-system Mumps -ICNTL 100;
-
+system Mumps;
+#system ProfileSPD;
 
 set temp [expr 1+$depthMeshNum];
 
-set isFinish [Analyse_Static_Disp_Control $RefNodeTag2 2 0.00001 0.00001 1.0E-3 50 $AlgOrder]
+set isFinish [Analyse_Static_Disp_Control $RefNodeTag2 2 0.0001 0.00001 1.0E-3 50 $AlgOrder]
 
 #integrator DisplacementControl $RefNodeTag2 2 0.001;
 #analysis Static;
