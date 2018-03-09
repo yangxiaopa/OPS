@@ -118,7 +118,6 @@ proc Analyse_Static_Disp_Control_Incr {ctrlNodeTag ctrlDof d_incr d_tol iter_max
     }
 }
 
-
 #One monotonic step of Displacement Control
 proc Analyse_Static_Disp_Control {ctrlNodeTag ctrlDof d_max d_incr d_tol iter_max AlgOrder {reduceNum 4}} {
     if {$d_max>= 0.0} {set d_incr [expr abs($d_incr)]} else {set d_incr [expr -abs($d_incr)]}
