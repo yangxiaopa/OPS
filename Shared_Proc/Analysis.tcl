@@ -82,7 +82,7 @@ proc iterAlg {AlgOrder} {
 }
 
 #One increment analysis of Displacement Control
-proc Analyse_Static_Disp_Control_Incr {ctrlNodeTag ctrlDof d_incr d_tol iter_max AlgOrder {reduceNum 3}} {
+proc Analyse_Static_Disp_Control_Incr {ctrlNodeTag ctrlDof d_incr d_tol iter_max AlgOrder {reduceNum 4}} {
     set cur_incr $d_incr;
     set curReduceNum 0;
     set isReduce 0;
